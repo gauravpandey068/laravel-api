@@ -15,6 +15,29 @@ class ProductController extends Controller
         $this->middleware('auth:sanctum')->only(['store', 'update', 'destroy']);
     }
 
+    //get all products
+    public function index()
+    {
+
+        try {
+            $products = Product::paginate(10);
+            if (count($products) === 0) {
+                return response()->json([
+                    'message' => 'No products found'
+                ], 404);
+            } else {
+                return response()->json([
+                    'respond' => $products
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Internal Serval Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     //save products
     public function store(Request $request)
     {
@@ -34,29 +57,6 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Product creation failed',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    //get all products
-    public function index()
-    {
-
-        try {
-            $products = Product::all();
-            if (count($products) === 0) {
-                return response()->json([
-                    'message' => 'No products found'
-                ], 404);
-            } else {
-                return response()->json([
-                    'respond' => $products
-                ], 200);
-            }
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Internal Serval Error',
                 'error' => $e->getMessage()
             ], 500);
         }
