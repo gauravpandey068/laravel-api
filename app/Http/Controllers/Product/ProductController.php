@@ -19,6 +19,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
+            //if request has query params then filter products
             if ($request->has('search')) {
                 $products = Product::where('name', 'like', '%' . $request->search . '%')->get();
             } else {
