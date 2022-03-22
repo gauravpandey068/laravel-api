@@ -16,11 +16,15 @@ class ProductController extends Controller
     }
 
     //get all products
-    public function index()
+    public function index(Request $request)
     {
-
         try {
-            $products = Product::paginate(10);
+            if ($request->has('search')) {
+                $products = Product::where('name', 'like', '%' . $request->search . '%')->get();
+            } else {
+                $products = Product::paginate(10);
+            }
+
             if (count($products) === 0) {
                 return response()->json([
                     'message' => 'No products found'
